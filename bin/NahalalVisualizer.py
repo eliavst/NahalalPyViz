@@ -3,7 +3,7 @@ import panel as pn
 import pandas as pd
 import numpy as np
 
-from bin.graphs import graphPollutantRain, graphPollutantByDate
+from bin.graphs import graphPollutantRain, graphPollutantByDate, yLabel
 from bin.maps import mapPoint, mapDate, smp_pnt, nahalal, nahalal_sub
 from bin.meteoData import df_daily_rain
 
@@ -15,10 +15,11 @@ os.getcwd()
 folder =  'C:/Users/eliav.ARO/Documents/IsraelWFP/Code/Python/Nahalal/PyViz/'
 
 
+final_df = pd.read_csv(folder + 'data/final_df.csv')
+
 class NahalalVisuzalizer(param.Parameterized):
     #all results
     #dates
-    final_df = pd.read_csv(folder + 'data/final_df.csv')
 
     dates_list = pd.to_datetime(final_df.sample_date.unique()).sort_values().strftime('%d/%m/%Y')
     pol_list = ['EC', 'pH', 'N-NO3','P-PO4','Cl','S-SO4','N-NO2','N-NH4','TOC']
@@ -33,7 +34,7 @@ class NahalalVisuzalizer(param.Parameterized):
         return view_fn(
             point=self.points,
             p=self.pollutant,
-            df=self.final_df,
+            df=final_df,
             rain_df=df_daily_rain
         )
 
@@ -44,7 +45,7 @@ class NahalalVisuzalizer(param.Parameterized):
         return view_fn(
             date=clean_date,
             p=self.pollutant,
-            df=self.final_df,
+            df=final_df,
         )
 
 
@@ -61,7 +62,7 @@ class NahalalVisuzalizer(param.Parameterized):
         # clean_date = pd.to_datetime(adate, format='%d/%m/%Y').strftime('%Y-%m-%d')
         # pol = 'Cl'
 
-        df = self.final_df.loc[self.final_df.sample_date==clean_date, ['id',self.pollutant]].reset_index(drop=True)
+        df = final_df.loc[final_df.sample_date==clean_date, ['id',self.pollutant]].reset_index(drop=True)
         # df = final_df.loc[final_df.sample_date==clean_date, ['id',pol]].reset_index(drop=True)
 
         return view_fn(
@@ -85,12 +86,10 @@ class NahalalVisuzalizer(param.Parameterized):
             return self.pnPointMap()
         elif self.view_type=='By Date':
             return self.pnDateMap()
-        # if self.view_type=='By Date':
-        #     clean_date = pd.to_datetime(self.dates, format='%d/%m/%Y').strftime('%Y-%m-%d')
-        #     clean_date = pd.to_datetime('28/10/19', format='%d/%m/%Y').strftime('%Y-%m-%d')
-        #
-        #     final_df
-        #     return self.pnPointMap()
+
+
+
+
 
 
     # @pn.depends(
@@ -123,86 +122,21 @@ class NahalalVisuzalizer(param.Parameterized):
     #     map = self.pnCropRegionMap()
     #     return pn.Row(pn.layout.HSpacer(), pn.Column(bar, width=700), pn.Column(map,width=500, height=800))
     #
-    # @param.depends("crop_category", "crop_type", "y_value", "region")
-    # def view_header(self):
-    #
-    #     def agg_value(gt = self.growth_type, ct = self.crop_type, gct = self.general_crop_type, cc_cat=self.crop_category,
-    #                   y = self.y_value):
-    #         #filter data by crop type level
-    #         if gt != 'Choose...':
-    #             df = data.loc[data.growth_name_heb == gt]
-    #         elif ct != 'Choose...':
-    #             df = data.loc[data.crop_name == ct]
-    #         elif gct != 'Choose...':
-    #             df = data.loc[data.general_crop_name == gct]
-    #         elif cc_cat == "All Crops":
-    #             df = data
-    #         elif cc_cat == "Plantations/Citrus":
-    #             df = data.loc[data.crop_category_name.isin(["Plantations","Citrus"])]
-    #         elif cc_cat == "Vegetables/Herbs":
-    #             df = data.loc[data.crop_category_name.isin(["Vegetables","Herbs"])]
-    #         elif cc_cat == "Field Crops/Flowers":
-    #             df = data.loc[data.crop_category_name.isin(["Field Crops","Flowers"])]
-    #
-    #
-    #
-    #         ### get agg by yvalue
-    #         y_agg = None
-    #         if y=="m3 per dunam":
-    #             y_agg = np.round(df['m3_per_dunam'].mean(),1)
-    #         elif y == "m3 per yield":
-    #             y_agg = np.round(df['m3_per_yield'].mean(),1)
-    #         elif y == "Area (square km)":
-    #             y_agg = np.round(df['dunam'].sum()/1000,1)
-    #         elif y == "Water Use (MCM/year)":
-    #             y_agg = np.round(df['total_m3'].sum()/10**6,1)
-    #
-    #         return y_agg
-    #
-    #
-    #     # wus = waterUseSource(data, self.crop_type)
-    #
-    #     def returnCropNameCategory(cc=self.crop_category, gct=self.general_crop_type, ct=self.crop_type, gt=self.growth_type):
-    #         if gt!='Choose...':
-    #             return '{} ({})'.format(ct, gt)
-    #         elif ct != 'Choose...':
-    #             return ct
-    #         elif gct != 'Choose...':
-    #             return gct
-    #         else:
-    #             return cc
-    #
-    #     header1 = "## {};".format(returnCropNameCategory())
-    #     header2 = "## {} - {};".format(self.y_value, agg_value())
-    #     header3 = "## {};".format(self.region)
-    #
-    #     # header4 = (
-    #     #     "## {};".format(self.general_crop_type)
-    #     #     if self.general_crop_type != "Choose..."
-    #     #     else ""
-    #     # )
-    #     # header5 = (
-    #     #     "## {};".format(self.crop_type)
-    #     #     if self.crop_type != "Choose..."
-    #     #     and self.crop_type != self.general_crop_type
-    #     #     else ""
-    #     # )
-    #     # header6 = (
-    #     #     "## {};".format(self.growth_type) if self.growth_type != "Choose..." else ""
-    #     # )
-    #     header6 = (
-    #         "##Yield: {} ton/dunam;".format(self.crop_yield) if self.crop_yield != 0 else ""
-    #     )
-    #
-    #     return pn.Row(
-    #         pn.pane.Markdown(header1),
-    #         pn.pane.Markdown(header2),
-    #         pn.pane.Markdown(header3),
-    #         # pn.pane.Markdown(header4),
-    #         # pn.pane.Markdown(header5),
-    #         # pn.pane.Markdown(header5),
-    #         pn.pane.Markdown(header6)
-    #     )
+    @param.depends("view_type", "dates", "points", "pollutant")
+    def view_header(self):
+
+
+        def returnDatePoint(self):
+            if self.view_type == 'By Date':
+                return self.dates
+            else:
+                return self.points
+        header = "## Nahalal Stream Water Quality Viewer - {} ({}) - {}".format(self.view_type,returnDatePoint(self), yLabel(self.pollutant))
+
+        return pn.pane.Markdown(header, width=750)
+
+
+
 
     @param.depends("view_type")
     def widgets(self):

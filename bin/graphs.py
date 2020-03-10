@@ -7,6 +7,11 @@ import colorcet as cc
 from matplotlib.colors import ListedColormap, Normalize
 from matplotlib.cm import ScalarMappable
 
+from bin.NahalalVisualizer import final_df
+
+
+
+#colormap
 cmap = ListedColormap(cc.fire[:-4][::-1])
 
 # from pandas.plotting import register_matplotlib_converters
@@ -18,7 +23,17 @@ def yLabel(p):
     elif p == 'EC':
         return 'EC (μS/cm)'
     else:
-        return '{} concentration (mg/l)'.format(p)
+        return '{} (mg/l)'.format(p)
+
+        #return '{} {}(mg/l)'.format(p, 'concentration ' if conc else '')
+
+def yLim(p, final_df=final_df):
+    ymax = final_df[p].max() * 1.05
+    if p == 'pH':
+        ymin = final_df[p].min() * .95
+    else:
+        ymin = 0
+    return ymin, ymax
 
 #point = 11; p = 'P-PO4'; df = final_df; rain_df=df_daily_rain
 def graphPollutantRain(point, p, df, rain_df):
@@ -40,21 +55,16 @@ def graphPollutantRain(point, p, df, rain_df):
     axt.bar('date', 'rain_mm', color='lightblue', data=rain_df.reset_index(), label='Daily rain (nahalal)')
     axt.set_ylabel('Rain (mm) - Neve Yaar IMS', color='lightblue')
 
-    if p != 'pH':
-        ax.set_ylim(0, ax.get_ylim()[1])
-    # # limits
-    # if p == 'N-NO3':
-    #
-    #     ax.set_ylim(0, 100)
-    # elif p == 'Cl':
-    #     ax.set_ylim(0, 1200)
+    ###ylim
+    ymin, ymax = yLim(p)
+    ax.set_ylim(ymin, ymax)
 
     ax.set_xlim('2019-10-15', ax.get_xlim()[1])
     ax.set_xlabel('Date')
 
     ax.set_title('{} for point {} and daily rain'.format(ylabel,point), weight='bold')
     ax.set_xticks(p_df_sel['sample_date'])
-    ax.set_xticklabels(ax.get_xticklabels(), rotation=15)
+    ax.set_xticklabels(ax.get_xticklabels(), rotation=20)
     ax.xaxis.set_major_formatter(DateFormatter("%d-%m-%y"))
 
     # axt.set_yticklabels(axt.get_yticklabels(), color='lightblue', weight='bold')
@@ -72,26 +82,20 @@ def graphPollutantByDate(date, p, df):
     p_df_sel = df.loc[df.sample_date == date, ['id', p]].dropna().reset_index(drop=True)
     fig, ax = plt.subplots(figsize=(10, 5))
 
-    ax.scatter('id', p, data=p_df_sel, c=p_df_sel[p], s=100, cmap=cmap)
+    ax.scatter('id', p, data=p_df_sel, c=p_df_sel[p], s=100, cmap=cmap, edgecolors='purple')
     # cbaxes = fig.add_axes([0.05, 0.1, 0.03, 0.8])
     norm = Normalize(vmin=p_df_sel[p].min(), vmax=p_df_sel[p].max())
 
     fig.colorbar(ScalarMappable(norm=norm, cmap=cmap),
                  ax=ax, fraction=.1, orientation='vertical')
     #ax.plot('id', p, marker='o', data=p_df_sel, markersize=10, color='purple', linestyle='none', alpha=0.8)
+
     ylabel = yLabel(p)
+    ax.set_ylabel(ylabel, color='purple')
 
-    ax.set_ylabel(ylabel, color='black')
-
-
-    if p != 'pH':
-        ax.set_ylim(0, ax.get_ylim()[1])
-    # # limits
-    # if p == 'N-NO3':
-    #
-    #     ax.set_ylim(0, 100)
-    # elif p == 'Cl':
-    #     ax.set_ylim(0, 1200)
+    ###ylim
+    ymin, ymax = yLim(p)
+    ax.set_ylim(ymin, ymax)
 
     ax.set_xlabel('Points')
 
