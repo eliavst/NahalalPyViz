@@ -11,11 +11,7 @@ from bin.meteoData import df_daily_rain
 import os
 os.getcwd()
 
-
-folder =  'C:/Users/eliav.ARO/Documents/IsraelWFP/Code/Python/Nahalal/PyViz/'
-
-
-final_df = pd.read_csv(folder + 'data/final_df.csv')
+final_df = pd.read_csv('data/final_df.csv')
 
 class NahalalVisuzalizer(param.Parameterized):
     #all results

@@ -7,7 +7,7 @@ import colorcet as cc
 from matplotlib.colors import ListedColormap, Normalize
 from matplotlib.cm import ScalarMappable
 
-from bin.NahalalVisualizer import final_df
+final_df = pd.read_csv('data/final_df.csv')
 
 
 
