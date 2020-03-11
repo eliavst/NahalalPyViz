@@ -9,8 +9,7 @@ import seaborn as sns
 from pandas.plotting import register_matplotlib_converters
 register_matplotlib_converters()
 
-folder = 'C:/Users/eliav.ARO/Documents/IsraelWFP/Code/Python/Nahalal/PyViz/'
-ny = pd.read_csv(folder+'data/NeveYaar10m.csv', encoding='windows-1255')
+ny = pd.read_csv('data/NeveYaar10m.csv', encoding='windows-1255')
 
 ims_df = ny
 def cleanIMSTable(ims_df):
