@@ -104,7 +104,7 @@ dependencies:
   - pytz=2019.3
   - pyviz_comms=0.7.3=py_0
   - PyWavelets=1.1.1
-  - pywin32=227=py37_1
+  - pywin32=227=py37he774522_1
   - pywinpty=0.5.7=py37_0
   - PyYAML=5.3
   - pyzmq=18.1.1
