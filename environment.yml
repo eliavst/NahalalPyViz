@@ -102,7 +102,7 @@ dependencies:
  - PySocks==1.7.1
  - python-dateutil==2.8.1
  - pytz==2019.3
- - pyviz-comms==0.7.3
+  - pyviz_comms=0.7.3=py_0
  - PyWavelets==1.1.1
  - pywin32==227
  - pywinpty==0.5.7
