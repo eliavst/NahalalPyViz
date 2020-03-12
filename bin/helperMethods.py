@@ -29,3 +29,17 @@ def yLabel(p):
         return 'EC (μS/cm)'
     else:
         return '{} (mg/l)'.format(p)
+
+
+
+def rewriteReqFile():
+    filename = 'requirments.txt'
+    with open(filename, 'r') as fnr:
+        text = fnr.readlines()
+        print(text)
+
+    filename2 = 'requirments2.txt'
+
+    text = "".join([' - ' + line for line in text])
+    with open(filename2, 'w') as fnw:
+        fnw.write(text)
