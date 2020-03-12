@@ -4,7 +4,7 @@ import pandas as pd
 import numpy as np
 
 from bin.graphs import graphPollutantRain, graphPollutantByDate
-from bin.maps import mapPoint, mapDate, smp_pnt, nahalal, nahalal_sub
+from bin.maps import mapPoint, mapDate
 from bin.meteoData import df_daily_rain
 from bin.helperMethods import yLabel
 

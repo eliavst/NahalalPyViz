@@ -4,16 +4,19 @@ import geoviews as gv
 import geoviews.tile_sources as gts
 import colorcet as cc
 from bokeh.models import HoverTool
-from bin.helperMethods import yLabel
+from bin.helperMethods import yLabel, returnCMAP
 
 
 def cmapAndPName(p):
+
+    cmap = returnCMAP(p)
+
     if p!='pH':
-        cmap = cc.fire[:-4][::-1]
+        #cmap = cc.fire[:-4][::-1]
         symmetric=False
         pname=p
     else:
-        cmap = cc.gwv
+        #cmap = cc.gwv
         symmetric=True
         pname = 'pH0'
     return cmap, symmetric, pname
@@ -60,7 +63,7 @@ def mapPoint(id=11):
         (
                 gts.EsriImagery.opts(alpha=0.4)
                 * gts.OSM.opts(alpha=0.4)
-                * basin.opts(color='chocolate', line_width=1.5, alpha=.5)
+                * basin.opts(color='chocolate', line_width=2, alpha=.5)
                 * gv.Path(kishon).opts(line_width=3.5, alpha=0.4, line_color="darkblue", line_dash="dashed")
                 * gv.Path(nahalal).opts(line_width=2.5, alpha=0.4, line_color="blue")
                 * gv.Path(nahalal_sub).opts(
@@ -84,14 +87,16 @@ def mapDate(df):
     minx, maxx, miny, maxy = boundingBox(nahalal_basin)
     #valid results
     if len(smp_pnt_df) > 0:
+
         #clean column names
         smp_pnt_df.columns = smp_pnt_df.columns.map(lambda x: x.replace('-','_'))
 
         pol = smp_pnt_df.columns[-1]
+        print(pol)
+        cmap, symmetric, pname = cmapAndPName(pol)
         # cmap/symmetric
         if pol=='pH':
             smp_pnt_df['pH0'] = smp_pnt_df['pH'] - 7
-        cmap, symmetric, pname = cmapAndPName(pol)
         #vdims
         vdims = ["id", "description", pol]
         if pol == 'pH':
@@ -112,7 +117,7 @@ def mapDate(df):
         points_map = (
             (gts.EsriImagery.opts(alpha=0.4)
              * gts.OSM.opts(alpha=0.4)
-             * basin.opts(color='chocolate', line_width=1.5, alpha=.5)
+             * basin.opts(color='chocolate', line_width=2, alpha=.5)
              * gv.Path(kishon).opts(line_width=3.5, alpha=0.4, line_color="darkblue", line_dash="dashed")
              * gv.Path(nahalal).opts(line_width=2.5, alpha=0.4, line_color="blue")
              * gv.Path(nahalal_sub).opts(
