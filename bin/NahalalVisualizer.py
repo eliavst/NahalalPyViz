@@ -3,9 +3,10 @@ import panel as pn
 import pandas as pd
 import numpy as np
 
-from bin.graphs import graphPollutantRain, graphPollutantByDate, yLabel
+from bin.graphs import graphPollutantRain, graphPollutantByDate
 from bin.maps import mapPoint, mapDate, smp_pnt, nahalal, nahalal_sub
 from bin.meteoData import df_daily_rain
+from bin.helperMethods import yLabel
 
 
 import os
@@ -26,12 +27,15 @@ class NahalalVisuzalizer(param.Parameterized):
     points = param.Selector(default=11, objects=np.arange(1,14))
     pollutant = param.Selector(default='EC', objects=pol_list)
 
+    relative_scale = param.Boolean(default=False)
+
     def pnPollConcByPoint(self, view_fn=graphPollutantRain):
         return view_fn(
             point=self.points,
             p=self.pollutant,
             df=final_df,
-            rain_df=df_daily_rain
+            rain_df=df_daily_rain,
+            relative=self.relative_scale
         )
 
 
@@ -42,6 +46,7 @@ class NahalalVisuzalizer(param.Parameterized):
             date=clean_date,
             p=self.pollutant,
             df=final_df,
+            relative=self.relative_scale
         )
 
 
@@ -66,7 +71,7 @@ class NahalalVisuzalizer(param.Parameterized):
         )
 
     @pn.depends(
-        "view_type", "points", "dates", "pollutant"
+        "view_type", "points", "dates", "pollutant", "relative_scale"
     )
     def returnGraph(self):
         if self.view_type=='By Point':
@@ -84,44 +89,10 @@ class NahalalVisuzalizer(param.Parameterized):
             return self.pnDateMap()
 
 
-
-
-
-
-    # @pn.depends(
-    #     "general_crop_type", "crop_type", "growth_type", "crop_category", "y_value", "region"
-    # )
-    # def pnCropRegionMap(self, view_fn=cropByRegionMap):
-    #     return view_fn(
-    #         data,
-    #         kc_zone_gdf,
-    #         general_crop_type=self.general_crop_type,
-    #         crop_type=self.crop_type,
-    #         growth_type=self.growth_type,
-    #         cc_cat=self.crop_category,
-    #         y_value=self.y_value,
-    #         region = self.region
-    #     )
-    #
-    # @param.depends(
-    #     "general_crop_type",
-    #     "crop_type",
-    #     "growth_type",
-    #     "crop_category",
-    #     "y_value",
-    #     "region",
-    #     watch=True,
-    # )
-    # def view_bar(self, **kwargs):
-    #     #print("view_bar")
-    #     bar = self.pnCropBar()
-    #     map = self.pnCropRegionMap()
-    #     return pn.Row(pn.layout.HSpacer(), pn.Column(bar, width=700), pn.Column(map,width=500, height=800))
-    #
     @param.depends("view_type", "dates", "points", "pollutant")
     def view_header(self):
 
-
+        #determines wether to display current point or date
         def returnDatePoint(self):
             if self.view_type == 'By Date':
                 return self.dates
@@ -131,14 +102,12 @@ class NahalalVisuzalizer(param.Parameterized):
 
         return pn.pane.Markdown(header, width=750)
 
-
-
-
     @param.depends("view_type")
     def widgets(self):
         #         y_wid = pn.Param(
         #             self.param.y_value, width=200, widgets={"y_value": pn.widgets.Select}
         #         )
+        #type_wid = pn.Param(self.param.view_type, widgets={"view_type": pn.widgets.RadioButtonGroup})
         type_wid = self.param.view_type
         if self.view_type == 'By Point':
             select_wid = self.param.points
@@ -146,7 +115,7 @@ class NahalalVisuzalizer(param.Parameterized):
             select_wid = self.param.dates
 
         pol_wid = self.param.pollutant
-
+        rel_wid = self.param.relative_scale
         # reset_b = pn.widgets.Button(name="Reset", button_type="warning", width=50)
         # def b_reset(event):
         #     self.crop_category = "All Crops"
@@ -158,6 +127,7 @@ class NahalalVisuzalizer(param.Parameterized):
             type_wid,
             select_wid,
             pol_wid,
+            rel_wid,
             width=150,
         )
 
