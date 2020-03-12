@@ -117,7 +117,7 @@ dependencies:
   - scipy=1.4.1
   - seaborn=0.10.0
   - Send2Trash=1.5.0
-  - shapely=1.6.4=py37_0
+  - shapely=1.6.4.post2
   - six=1.14.0
   - sortedcontainers=2.1.0
   - statsmodels=0.11.1
