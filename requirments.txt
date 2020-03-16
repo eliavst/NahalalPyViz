@@ -1,1 +1,3 @@
-geoviews
+panel
+hvplot
+scikit-learn
