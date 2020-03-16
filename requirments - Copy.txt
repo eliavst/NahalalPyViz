@@ -1,0 +1,10 @@
+geoviews
+panel
+matplotlib
+pandas
+param
+numpy
+seaborn
+colorcet
+bokeh
+notebook
