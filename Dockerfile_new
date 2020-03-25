@@ -1,0 +1,87 @@
+# # Base image from https://github.com/ContinuumIO/docker-images/blob/master/miniconda3/debian/Dockerfile
+# # Since it's not published on Dockerhub yet, we build it as separate stage
+
+# FROM debian:buster-slim AS continuumio-miniconda3-debian
+
+# ENV LANG=C.UTF-8 LC_ALL=C.UTF-8
+# ENV PATH /opt/conda/bin:$PATH
+
+# RUN apt-get update --fix-missing && \
+#     apt-get install -y wget bzip2 ca-certificates libglib2.0-0 libxext6 libsm6 libxrender1 git && \
+#     apt-get clean
+
+# RUN wget --quiet https://repo.anaconda.com/miniconda/Miniconda3-4.7.12-Linux-x86_64.sh -O ~/miniconda.sh && \
+#     /bin/bash ~/miniconda.sh -b -p /opt/conda && \
+#     rm ~/miniconda.sh && \
+#     /opt/conda/bin/conda clean -tipsy && \
+#     ln -s /opt/conda/etc/profile.d/conda.sh /etc/profile.d/conda.sh && \
+#     echo ". /opt/conda/etc/profile.d/conda.sh" >> ~/.bashrc && \
+#     echo "conda activate base" >> ~/.bashrc && \
+#     find /opt/conda/ -follow -type f -name '*.a' -delete && \
+#     find /opt/conda/ -follow -type f -name '*.js.map' -delete && \
+#     /opt/conda/bin/conda clean -afy
+
+# CMD [ "/bin/bash" ]
+
+
+###############################################################################
+
+
+#
+# Next, build the actual image that will run in production.
+
+FROM continuumio-miniconda3-debian
+
+ENV LANG=C.UTF-8 LC_ALL=C.UTF-8
+ENV NUM_PROCS=4
+ENV BK_VERSION=1.4.0
+ENV BOKEH_RESOURCES=cdn
+
+# Running as root is insecure (http://canihaznonprivilegedcontainers.info/)
+# so create a new user and set working directory:
+RUN useradd --create-home appuser
+WORKDIR /home/appuser
+
+WORKDIR /app
+
+# Create the environment:
+COPY environment.yml .
+
+
+RUN conda env create -f environment.yml
+
+# Make RUN commands use the new environment:
+SHELL ["conda", "run", "-n", "pyviz37", "/bin/bash", "-c"]
+
+#RUN conda update -n pyviz37 -c defaults conda
+
+# Make sure the environment is activated:
+RUN echo "Make sure geoviews is installed:"
+RUN python -c "import geoviews"
+
+# The code to run when container is started:
+COPY run.py .
+COPY bin bin/
+COPY data data/
+COPY runpy2.py .
+
+ADD --chown=appuser:appuser https://raw.githubusercontent.com/bokeh/demo.bokeh.org/master/index.html ./index.html
+
+# Run as the newly created user:
+USER appuser
+
+# Expose 8080 being default https port for e.g. Google App Engine
+EXPOSE 8888
+
+#CMD bokeh serve run.py --address 0.0.0.0
+CMD bokeh serve --port 8080  --allow-websocket-origin="localhost:8888" \
+    --index=/home/appuser/index.html \
+    --num-procs=${NUM_PROCS} \
+    run.py 
+
+
+
+#CMD ['bokeh', 'serve', 'run.py', '--address', '0.0.0.0']
+#ENTRYPOINT ["conda", "run", "-n", "pyviz37"]
+# ENTRYPOINT ["conda", "run", "-n", "pyviz37", "python", "runpy2.py"]
+# ENTRYPOINT ["bokeh", "serve", "run.py", "--address", "0.0.0.0"]
