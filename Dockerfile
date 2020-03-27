@@ -23,7 +23,6 @@ RUN python -c "import geoviews"
 COPY run.py .
 COPY bin bin/
 COPY data data/
-COPY runpy2.py .
 
 
 
