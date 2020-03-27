@@ -3,7 +3,7 @@ from matplotlib.dates import DateFormatter
 import matplotlib.dates as mdates
 import matplotlib.pyplot as plt
 from matplotlib import rcParams
-import seaborn as sns
+# import seaborn as sns
 
 # Date time conversion registration
 from pandas.plotting import register_matplotlib_converters
