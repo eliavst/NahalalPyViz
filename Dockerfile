@@ -12,6 +12,7 @@ RUN apt-get update && apt-get install -y \
  
 # Create the environment:
 COPY requirements.txt .
+RUN pip install shapely cartopy --no-binary shapely --no-binary cartopy
 RUN pip install -r requirements.txt
 
 # Make RUN commands use the new environment:
@@ -31,9 +32,11 @@ COPY data data/
 # EXPOSE 80
 
 VOLUME /app
-EXPOSE 8080
+EXPOSE 5006
 
-CMD ["bokeh", "serve", "run.py", "--address", "0.0.0.0"]
+# CMD ["bokeh", "serve", "run.py", "--address", "0.0.0.0"]
+
+CMD ["bokeh", "serve", "run.py"]
 #ENTRYPOINT ["conda", "run", "-n", "pyviz37"]
 # ENTRYPOINT ["conda", "run", "-n", "pyviz37", "python", "runpy2.py"]
 #ENTRYPOINT ["conda", "run", "-n", "pyviz37", "bokeh", "serve", "run.py", "--address", "0.0.0.0"]
