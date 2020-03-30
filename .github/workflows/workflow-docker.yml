@@ -30,7 +30,7 @@ jobs:
         HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
       run: heroku container:login
 
-      - name: print test2
-      run: echo test2
+    - name: print test2
+    run: echo test2
 
 
