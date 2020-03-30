@@ -50,4 +50,4 @@ pane = pn.panel(
     )
 )
 #pane.show()
-pane.servable()
+pane.servable(title="Nahalal Water Quality Viewer")

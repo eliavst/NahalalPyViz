@@ -3,7 +3,6 @@ import matplotlib.pyplot as plt
 import matplotlib.patheffects as path_effects
 from matplotlib.dates import DateFormatter
 from matplotlib import rcParams
-import colorcet as cc
 from matplotlib.colors import ListedColormap, Normalize, TwoSlopeNorm
 from matplotlib.cm import ScalarMappable
 from bin.helperMethods import yLabel, returnCMAP
@@ -40,12 +39,14 @@ def yLim(p, relative, filtered_df, final_df=final_df):
 #point = 11; p = 'P-PO4'; df = final_df; rain_df=df_daily_rain; relative=True
 def graphPollutantRain(point, p, df, rain_df, relative):
     rcParams['axes.spines.right'] = True
+    rcParams['font.size'] = 14
+
 
     p_df_sel = df.loc[df.id==point,['sample_date',p]].dropna().reset_index(drop=True)
     p_df_sel.sample_date = pd.to_datetime(p_df_sel.sample_date)
     fig, ax = plt.subplots(figsize=(10,5))
 
-    plt.subplots_adjust(right=0.85)
+    plt.subplots_adjust(right=0.83, bottom=0.165)
 
     axt = ax.twinx()
     ax.set_zorder(axt.get_zorder()+1)
@@ -63,16 +64,16 @@ def graphPollutantRain(point, p, df, rain_df, relative):
 
     # ax.plot('sample_date',p, marker='o', data = p_df_sel, markersize =10, color='purple', linestyle='none', alpha=0.8)
     ylabel = yLabel(p)
-    ax.set_ylabel(ylabel, color='purple')
+    ax.set_ylabel(ylabel, color='purple', weight='bold')
     axt.bar('date', 'rain_mm', color='lightblue', data=rain_df.reset_index(), label='Daily rain (nahalal)')
-    axt.set_ylabel('Daily Rain (mm) [Neve Yaar-IMS]', color='grey', path_effects=[path_effects.Stroke(linewidth=1, foreground='lightblue', alpha=.8)])
+    axt.set_ylabel('Daily Rain (mm) [Neve Yaar-IMS]', color='grey', weight='bold', path_effects=[path_effects.Stroke(linewidth=.75, foreground='lightblue', alpha=.8)])
 
     ###ylim
     ymin, ymax = yLim(p, relative, p_df_sel)
     ax.set_ylim(ymin, ymax)
 
     ax.set_xlim('2019-10-15', ax.get_xlim()[1])
-    ax.set_xlabel('Date')
+    ax.set_xlabel('Date', weight='bold')
 
     ax.set_title('{} for point {} and daily rain'.format(ylabel,point), weight='bold')
     ax.set_xticks(p_df_sel['sample_date'])
@@ -95,6 +96,8 @@ def graphPollutantRain(point, p, df, rain_df, relative):
 
 # date = '2020-02-03'
 def graphPollutantByDate(date, p, df, relative):
+    rcParams['font.size'] = 14
+
     #rcParams['axes.spines.right'] = False
     pd.to_datetime(df.sample_date).unique()
     p_df_sel = df.loc[df.sample_date == date, ['id', p]].dropna().reset_index(drop=True)
@@ -113,12 +116,11 @@ def graphPollutantByDate(date, p, df, relative):
     #ax.plot('id', p, marker='o', data=p_df_sel, markersize=10, color='purple', linestyle='none', alpha=0.8)
 
     ylabel = yLabel(p)
-    ax.set_ylabel(ylabel, color='purple')
-
+    ax.set_ylabel(ylabel, color='purple', weight='bold')
     ###ylim
     ymin, ymax = yLim(p, relative, p_df_sel)
     ax.set_ylim(ymin, ymax)
-    ax.set_xlabel('Points')
+    ax.set_xlabel('Point', weight='bold')
 
     clean_date = pd.to_datetime(date).strftime('%d/%m/%Y')
     ax.set_title('{} on {}'.format(ylabel, clean_date), weight='bold')
