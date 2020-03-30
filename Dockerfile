@@ -25,23 +25,11 @@ COPY run.py .
 COPY bin bin/
 COPY data data/
 
-
-
-
-# EXPOSE 5006 
-# EXPOSE 80
-
 VOLUME /app
 
+# Add User
 RUN useradd -m myuser
 USER myuser
 
+#Run Bokeh Server
 CMD bokeh serve --port $PORT run.py --allow-websocket-origin=*
-
-
-# CMD ["bokeh", "serve", "run.py", "--address", "0.0.0.0"]
-
-# CMD ["bokeh", "serve", "run.py", "--port", "${PORT}"]
-#ENTRYPOINT ["conda", "run", "-n", "pyviz37"]
-# ENTRYPOINT ["conda", "run", "-n", "pyviz37", "python", "runpy2.py"]
-#ENTRYPOINT ["conda", "run", "-n", "pyviz37", "bokeh", "serve", "run.py", "--address", "0.0.0.0"]
