@@ -30,7 +30,7 @@ jobs:
         HEROKU_APP_NAME: "nahalal"
         HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
       #run: heroku container:login
-      run: docker login --username=eliavst --password=$HEROKU_API_KEY registry.heroku.com --password-stdin
+      run: docker login --username=eliavst --password-stdin=$HEROKU_API_KEY registry.heroku.com 
 
     - name: Build and push
       env:
