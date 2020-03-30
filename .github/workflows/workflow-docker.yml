@@ -31,6 +31,6 @@ jobs:
       run: heroku container:login
 
     - name: print test2
-    run: echo test2
+      run: echo test2
 
 
