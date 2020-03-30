@@ -32,7 +32,11 @@ jobs:
       #run: heroku container:login
       run: docker login --username=eliavst --password=$HEROKU_API_KEY registry.heroku.com --password-stdin
 
-    - name: print test2
-      run: echo test2
-
-
+    - name: Build and push
+      env:
+        HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+      run: heroku container:push -a nahalal web 
+    - name: Release
+      env:
+        HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+      run: heroku container:release -a nahalal web 
