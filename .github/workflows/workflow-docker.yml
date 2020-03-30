@@ -29,7 +29,7 @@ jobs:
       env:
         HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
       #run: heroku container:login
-      run: heroku container:login
+      run: docker login --username=eliavst --password=$HEROKU_API_KEY registry.heroku.com
     - name: Build and push
       env:
         HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
