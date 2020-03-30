@@ -27,6 +27,8 @@ nahalal_sub = gpd.read_file("data/nahalal_sub4326.gpkg")
 nahalal_basin = gpd.read_file("data/nahalal_basin.gpkg")
 kishon = gpd.read_file("data/kishon.gpkg")
 
+labels_fsize=10.5
+tick_fsize=10
 def boundingBox(basin ,minxbuffer=.01, maxxbuffer=0, minybuffer=.01, maxybuffer=0):
     '''
 
@@ -72,7 +74,7 @@ def mapPoint(id=11):
                 * current_pnt.opts(size=20, color="purple")
             # * gv.Contours(interest_zone).opts(alpha=0)
         )
-            .opts(width=500, height=375)
+            .opts(width=500, height=375, fontsize={'labels': labels_fsize, 'xticks': tick_fsize, 'yticks': tick_fsize})
             .redim.range(Longitude=(minx, maxx), Latitude=(miny, maxy))
     )
 
@@ -124,7 +126,7 @@ def mapDate(df):
                         line_width=2, line_dash="dashdot", alpha=0.4, line_color="blue")
              * pnts.opts(size=15, alpha=0.8, tools=[hover], color_index=pname, cmap = cmap, line_color='purple', symmetric=symmetric)
              )
-                .opts(width=500, height=375)
+                .opts(width=500, height=375, fontsize={'labels': labels_fsize, 'xticks': tick_fsize, 'yticks': tick_fsize})
                 .redim.range(Longitude=(minx, maxx), Latitude=(miny, maxy))
         )
     else:
@@ -135,7 +137,7 @@ def mapDate(df):
          * gv.Path(kishon).opts(line_width=3.5, alpha=0.4, line_color="darkblue", line_dash="dashed")
          * gv.Path(nahalal).opts(line_width=2.5, alpha=0.4, line_color="blue")
          * gv.Path(nahalal_sub).opts(line_width=2, line_dash="dashdot", alpha=0.4, line_color="blue")
-         ).opts(width=500, height=375).redim.range(Longitude=(minx, maxx), Latitude=(miny, maxy))
+         ).opts(width=500, height=375, fontsize={'labels': labels_fsize, 'xticks': tick_fsize, 'yticks': tick_fsize}).redim.range(Longitude=(minx, maxx), Latitude=(miny, maxy))
     )
 
     return points_map

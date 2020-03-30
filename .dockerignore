@@ -1,0 +1,8 @@
+Dockerfile
+.dockerignore
+.ipynb_checkpoints
+orig_environment.yml
+pyviz37.yml
+.gitattributes
+.gitignore
+

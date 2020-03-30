@@ -9,9 +9,6 @@ from bin.meteoData import df_daily_rain
 from bin.helperMethods import yLabel
 
 
-import os
-os.getcwd()
-
 final_df = pd.read_csv('data/final_df.csv')
 
 class NahalalVisuzalizer(param.Parameterized):
