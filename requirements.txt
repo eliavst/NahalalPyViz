@@ -1,9 +1,9 @@
-matplotlib
+matplotlib==3.2.1
 colorcet
 bokeh==1.4.0
 panel==0.8.0
 Cartopy==0.17.0
 geoviews==1.6.6
 holoviews==1.12.7
-geopandas
-scipy
+geopandas==0.7.0
+scipy==1.4.1
