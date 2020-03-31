@@ -6,9 +6,9 @@ name: Docker-Clean
 # events but only for the master branch
 on:
   push:
-    branches: [ docker-clean ]
+    branches: [ master ]
   pull_request:
-    branches: [ docker-clean ]
+    branches: [ master ]
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -29,7 +29,6 @@ jobs:
       env:
         HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
       run: heroku container:login
-      # run: docker login --username=eliavst --password=$HEROKU_API_KEY registry.heroku.com
     - name: Build and push
       env:
         HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
