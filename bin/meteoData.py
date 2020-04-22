@@ -35,7 +35,7 @@ def initalizeRainData():
     ims_df=cleanIMSTable(ims_df)
     df_daily_rain, df_monthly_rain = monthlyAndDailyRain(ims_df)
 
-    df_daily_rain.to_csv('data/df_daily_rain.csv', index=False)
+    df_daily_rain.to_csv('data/df_daily_rain.csv')
     df_monthly_rain.to_csv('data/df_monthly_rain.csv')
 
 
