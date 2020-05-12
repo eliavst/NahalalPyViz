@@ -12,7 +12,8 @@ RUN apt-get update && apt-get install -y \
  
 # Create the environment:
 COPY requirements.txt .
-RUN pip install shapely cartopy==0.17.0 --no-binary shapely --no-binary cartopy
+RUN pip install numpy
+RUN pip install shapely cartopy==0.18.0 --no-binary shapely --no-binary cartopy
 RUN pip install -r requirements.txt
 
 # Make RUN commands use the new environment:
