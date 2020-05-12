@@ -4,7 +4,7 @@ bokeh==1.4.0
 panel==0.8.1
 Cartopy==0.18.0
 geoviews==1.6.6
-holoviews==1.10
+holoviews==1.11.1
 geopandas==0.7.0
 scipy==1.4.1
 requests
