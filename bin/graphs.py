@@ -84,8 +84,7 @@ def graphPollutantRain(point, p, df, rain_df, relative):
     ax.set_xticklabels(ax.get_xticklabels(), rotation=90, minor=True, fontdict=(dict(fontsize=9)))
     ax.xaxis.set_minor_formatter(DateFormatter("%Y"))
 
-
-
+    pd.to_datetime('2020-01-01').strftime('%m-%y')
     # axt.set_yticklabels(axt.get_yticklabels(), color='lightblue', weight='bold')
     # ax.set_xticks(['2020-01-01'], minor=True)
     # ax.set_xticklabels(["2020"], rotation=90, minor=True, weight='bold')

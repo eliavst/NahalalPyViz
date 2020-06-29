@@ -19,8 +19,12 @@ def loadDataFromIMSAPI():
     final_month = "{:02d}".format(new_date.month)
     final_day = "{:02d}".format(new_date.day)
 
+
+    station_id = '186' #newe yaar IMS
+    # station_id = '323' #newe yaar 10 min (AgroMeterology?)
+
     #load data from api
-    url = 'https://api.ims.gov.il/v1/envista/stations/186/data/1/?FROM=2019/10/15&to={}/{}/{}'.format(final_year, final_month, final_day)
+    url = 'https://api.ims.gov.il/v1/envista/stations/{}/data/1/?FROM=2019/10/15&to={}/{}/{}'.format(station_id, final_year, final_month, final_day)
     response = requests.request("GET", url, headers=headers)
     data = json.loads(response.text.encode('utf8'))
     df = pd.DataFrame(data['data'])

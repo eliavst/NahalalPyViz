@@ -33,7 +33,9 @@ pane = pn.panel(
                             pn.pane.Markdown(
                                 """Created by Eliav Shtull-Trauring in Dr. Nirit Bernstein's Lab | <br>
                                 Institute of Soil, Water and Environmental Sciences | 
-                                Agricultural Research Organization – Volcani Center""",
+                                Agricultural Research Organization – Volcani Center <br>
+                                Data may not be used without permission. <br>
+                                Contact info: eliav@volcani.agri.gov.il | +972 54 919 2918""",
                                 width=1050,
                                 style={
                                     "font-family": "Courier, monospace",
