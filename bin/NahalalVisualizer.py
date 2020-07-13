@@ -14,7 +14,6 @@ final_df = pd.read_csv('data/final_df.csv')
 class NahalalVisuzalizer(param.Parameterized):
     #all results
     #dates
-
     dates_list = pd.to_datetime(final_df.sample_date.unique()).sort_values().strftime('%d/%m/%Y')
     pol_list = ['EC', 'pH', 'N-NO3','P-PO4','Cl','S-SO4','N-NO2','N-NH4','TOC']
     #params
