@@ -38,6 +38,8 @@ def yLim(p, relative, filtered_df, final_df=final_df):
 
 #point = 11; p = 'P-PO4'; df = final_df; rain_df=df_daily_rain; relative=True
 def graphPollutantRain(point, p, df, rain_df, relative):
+    # print("graphPollutantRain")
+
     rcParams['axes.spines.right'] = True
     rcParams['font.size'] = 14
 
@@ -88,7 +90,7 @@ def graphPollutantRain(point, p, df, rain_df, relative):
     # axt.set_yticklabels(axt.get_yticklabels(), color='lightblue', weight='bold')
     # ax.set_xticks(['2020-01-01'], minor=True)
     # ax.set_xticklabels(["2020"], rotation=90, minor=True, weight='bold')
-
+    # print("graph test")
     plt.close("all")
 
     return fig
