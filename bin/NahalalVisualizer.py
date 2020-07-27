@@ -3,7 +3,7 @@ import panel as pn
 import pandas as pd
 import numpy as np
 
-from bin.graphs import graphPollutantRain, graphPollutantByDate
+from bin.graphs import graphPollutantRain, graphPollutantByDate, graphPollutantsByPointMulti, graphPollutantsByDateMulti
 from bin.maps import mapPoint, mapDate
 from bin.meteoData import df_daily_rain
 from bin.helperMethods import yLabel
@@ -17,13 +17,19 @@ class NahalalVisuzalizer(param.Parameterized):
     dates_list = pd.to_datetime(final_df.sample_date.unique()).sort_values().strftime('%d/%m/%Y')
     pol_list = ['EC', 'pH', 'N-NO3','P-PO4','Cl','S-SO4','N-NO2','N-NH4','TOC', 'Na', 'K', 'Ca', 'Mn', 'Mg', 'Fe',
                 'Zn','Cd', 'Co', 'Cr', 'Cu', 'Mo', 'B', 'Al', 'Ni', 'Pb', 'As', 'Hg']
+    pol_categories = ['pH, EC, Cl, Na, Ca, Mg, TOC, IC',
+                      'P-PO4, N-NO3, N-NO2, N-NH4, TN, TON, K, S-SO4',
+                      'B, Al, Fe, Cd, Co, Cu, Zn',
+                      'Mn, Mo, Ni, Cr, As, Pb, Hg']
     #params
-    view_type = param.Selector(default="By Point", objects=['By Date','By Point'])
+    view_type = param.Selector(default="By Point", objects=['By Date','By Point','By Date - Multi', 'By Point - Multi'])
 
     dates = param.Selector(default=dates_list[-1], objects=dates_list)
     points = param.Selector(default=11, objects=np.arange(1,14))
+    multi_dates = param.ListSelector(default=list(dates_list)[-3:-1], objects=list(dates_list))
+    multi_points = param.ListSelector(default=[10,11], objects=list(np.arange(1, 14)))
     pollutant = param.Selector(default='EC', objects=pol_list)
-
+    pollutant_group = param.Selector(default='pH, EC, Cl, Na, Ca, Mg, TOC, IC', objects=pol_categories)
     relative_scale = param.Boolean(default=False)
 
     def pnPollConcByPoint(self, view_fn=graphPollutantRain):
@@ -36,6 +42,16 @@ class NahalalVisuzalizer(param.Parameterized):
             relative=self.relative_scale
         )
 
+    def pnPollConcByPointMulti(self, view_fn=graphPollutantsByPointMulti):
+        # print("pnPollConcByPoint")
+        return view_fn(
+            df=final_df,
+            points=self.multi_points,
+            ps=self.pollutant_group,
+            relative=self.relative_scale
+
+        )
+
 
     def pnPollConcByDate(self, view_fn=graphPollutantByDate):
 
@@ -45,6 +61,16 @@ class NahalalVisuzalizer(param.Parameterized):
             p=self.pollutant,
             df=final_df,
             relative=self.relative_scale
+        )
+
+    def pnPollConcByDateMulti(self, view_fn=graphPollutantsByDateMulti):
+        # print("pnPollConcByPoint")
+        return view_fn(
+            df=final_df,
+            dates=self.multi_dates,
+            ps=self.pollutant_group,
+            relative=self.relative_scale
+
         )
 
 
@@ -69,7 +95,7 @@ class NahalalVisuzalizer(param.Parameterized):
         )
 
     @pn.depends(
-        "view_type", "points", "dates", "pollutant", "relative_scale"
+        "view_type", "points", "multi_points", "dates", "multi_dates", "pollutant", "pollutant_group", "relative_scale"
     )
     def returnGraph(self):
         # print("returnGraph")
@@ -77,6 +103,10 @@ class NahalalVisuzalizer(param.Parameterized):
             return self.pnPollConcByPoint()
         elif self.view_type=='By Date':
             return self.pnPollConcByDate()
+        if self.view_type=='By Point - Multi':
+            return pn.Row(pn.layout.HSpacer(), self.pnPollConcByPointMulti(), pn.layout.HSpacer())
+        elif self.view_type=='By Date - Multi':
+            return pn.Row(pn.layout.HSpacer(), self.pnPollConcByDateMulti(), pn.layout.HSpacer())
 
     @pn.depends(
         "view_type", "points", "dates", "pollutant"
@@ -84,26 +114,37 @@ class NahalalVisuzalizer(param.Parameterized):
     def returnMap(self):
         # print("returnMap")
         if self.view_type=='By Point':
-            print("byPoint")
+            # print("byPoint")
             return self.pnPointMap()
         elif self.view_type=='By Date':
-            print("byDate")
-
+            # print("byDate")
             return self.pnDateMap()
 
 
-    @param.depends("view_type", "dates", "points", "pollutant")
+    @param.depends("view_type", "dates", "points", "multi_dates", "multi_points", "pollutant", "pollutant_group",)
     def view_header(self):
 
         #determines wether to display current point or date
         def returnDatePoint(self):
-            if self.view_type == 'By Date':
-                return self.dates
+            if 'Multi' in self.view_type:
+                if 'Date' in self.view_type:
+                    return ','.join([x.strftime('%d/%m') for x in pd.to_datetime(self.multi_dates, format='%d/%m/%Y')])
+                else:
+                    return ','.join(map(lambda x: str(x), self.multi_points))
             else:
-                return self.points
-        header = "## Nahalal Stream Water Quality Viewer - {} ({}) - {}".format(self.view_type,returnDatePoint(self), yLabel(self.pollutant))
+                if self.view_type == 'By Date':
+                    return self.dates
+                else:
+                    return self.points
 
-        return pn.pane.Markdown(header, width=750)
+        if 'Multi' in self.view_type:
+            p_header = ','.join(self.pollutant_group.split(', ')[:2])+'...'
+        else:
+            p_header = yLabel(self.pollutant)
+
+        header = "## Nahalal Stream Water Quality Viewer - {} ({}) - {}".format(self.view_type,returnDatePoint(self), p_header)
+
+        return pn.pane.Markdown(header, width=1350, style={"text-align":"center"})
 
     @param.depends("view_type")
     def widgets(self):
@@ -112,13 +153,29 @@ class NahalalVisuzalizer(param.Parameterized):
         #         )
         #type_wid = pn.Param(self.param.view_type, widgets={"view_type": pn.widgets.RadioButtonGroup})
         type_wid = self.param.view_type
-        if self.view_type == 'By Point':
-            select_wid = self.param.points
-        else:
-            select_wid = self.param.dates
 
-        pol_wid = self.param.pollutant
+
+        ## MULTI POLLUTANT VIEW
+        if 'Multi' in self.view_type:
+            # print("Multi")
+            pol_wid = self.param.pollutant_group
+            if 'Point' in self.view_type:
+                # select_wid = pn.panel(self.param, widgets={'multi_points': pn.widgets.CheckBoxGroup})
+                select_wid = self.param.multi_points
+            else:
+                select_wid = self.param.multi_dates
+        ## SINGLE POLLUTANT VIEW
+        else:
+            # print("Single")
+            pol_wid = self.param.pollutant
+            if self.view_type == 'By Point':
+                select_wid = self.param.points
+            else:
+                select_wid = self.param.dates
+
         rel_wid = self.param.relative_scale
+
+        pol_cat_wid = self.param.pollutant_group
         # reset_b = pn.widgets.Button(name="Reset", button_type="warning", width=50)
         # def b_reset(event):
         #     self.crop_category = "All Crops"
