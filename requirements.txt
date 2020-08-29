@@ -8,6 +8,7 @@ geoviews==1.8.1
 holoviews==1.13.3
 geopandas==0.8.1
 scipy==1.4.1
+seaborn==0.10.1
 requests
 
 
