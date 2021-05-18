@@ -1,0 +1,14 @@
+numpy
+matplotlib
+colorcet
+bokeh
+panel
+Cartopy
+geoviews
+holoviews
+geopandas
+scipy
+seaborn
+requests
+
+
