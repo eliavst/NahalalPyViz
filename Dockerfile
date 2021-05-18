@@ -19,7 +19,7 @@ RUN pip install -r requirements.txt
 # Make RUN commands use the new environment:
 # Make sure the environment is activated:
 RUN echo "Make sure geoviews is installed:"
-RUN python -c "import geoviews"
+#RUN python -c "import geoviews"
 
 # The code to run when container is started:
 COPY run.py .
