@@ -1,4 +1,4 @@
-numpy==1.20.3
+numpy
 matplotlib==3.2.1
 colorcet==2.0.2
 bokeh==2.1.1
@@ -8,5 +8,5 @@ geoviews==1.8.1
 holoviews==1.13.3
 geopandas==0.8.1
 scipy==1.4.1
-seaborn==0.10.1
+seaborn
 requests
