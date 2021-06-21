@@ -80,7 +80,7 @@ def initalizeRainData():
 
     df_daily_rain.to_csv('data/df_daily_rain.csv')
     df_monthly_rain.to_csv('data/df_monthly_rain.csv')
-# initalizeRainData()
+initalizeRainData()
 
 df_daily_rain = pd.read_csv('data/df_daily_rain.csv', parse_dates=['date'], index_col=0)
 
