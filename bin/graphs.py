@@ -1,4 +1,4 @@
-import pandas as pd, seaborn as sns
+import pandas as pd, seaborn as sns, numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.patheffects as path_effects
 from matplotlib.dates import DateFormatter
@@ -7,7 +7,6 @@ from matplotlib.colors import ListedColormap, Normalize, TwoSlopeNorm
 from matplotlib.cm import ScalarMappable
 from bin.helperMethods import yLabel, returnCMAP, poll_std, cleanYTicks
 final_df = pd.read_csv('data/final_df.csv')
-
 
 
 ##return colormap based on pollutant
@@ -102,7 +101,7 @@ def graphPollutantByDate(date, p, df, relative):
 
     #rcParams['axes.spines.right'] = False
     pd.to_datetime(df.sample_date).unique()
-    p_df_sel = df.loc[df.sample_date == date, ['id', p]].dropna().reset_index(drop=True)
+    p_df_sel = df.loc[(df.sample_date == date) & (df.id.isin(np.arange(1,14))), ['id', p]].dropna().reset_index(drop=True)
     fig, ax = plt.subplots(figsize=(10, 5))
 
     #return colormap and norm

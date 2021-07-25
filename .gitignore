@@ -4,3 +4,4 @@ bin/__pycache__/*
 .ipynb_checkpoints/*
 SECRETS/*
 SECRETS/API_TOKEN.txt
+.vscode/settings.json
