@@ -8,7 +8,6 @@ from bin.maps import mapPoint, mapDate
 from bin.meteoData import df_daily_rain
 from bin.helperMethods import yLabel
 
-
 final_df = pd.read_csv('data/final_df.csv')
 
 class NahalalVisuzalizer(param.Parameterized):
@@ -24,8 +23,8 @@ class NahalalVisuzalizer(param.Parameterized):
     #params
     view_type = param.Selector(default="By Point", objects=['By Date','By Point','By Date - Multi', 'By Point - Multi'])
 
-    dates = param.Selector(default=dates_list[-1], objects=dates_list)
-    points = param.Selector(default=11, objects=np.arange(1,14))
+    dates = param.Selector(default=dates_list[-1], objects=list(dates_list))
+    points = param.Selector(default=11, objects=list(np.arange(1,14)))
     multi_dates = param.ListSelector(default=list(dates_list)[-3:-1], objects=list(dates_list))
     multi_points = param.ListSelector(default=[10,11], objects=list(np.arange(1, 14)))
     pollutant = param.Selector(default='EC', objects=pol_list)
