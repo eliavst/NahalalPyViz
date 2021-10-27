@@ -20,7 +20,7 @@ cowsay==2.0.3
 cryptography==2.8
 cycler==0.10.0
 cytoolz==0.10.1
-dask==2.12.0
+dask==2021.10.0
 datashader==0.10.0
 datashape==0.5.2
 decorator==4.4.2
