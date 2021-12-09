@@ -7,7 +7,7 @@ RUN apt-get update && apt-get install -y \
         libgeos-dev \
         # libgdal-dev \
         # libspatialindex-dev  \
-        cython \
+        #cython \
         g++
  
 # Create the environment:
